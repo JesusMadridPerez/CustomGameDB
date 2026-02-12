@@ -1,4 +1,4 @@
-#Planificación
+# Planificación
 
 1. Crear una primera versión funcional del proyecto (check)
 2. Pasar los datos de la api a una base de datos personalizada
