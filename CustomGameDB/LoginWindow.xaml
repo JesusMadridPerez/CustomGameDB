@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CustomGameDB"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="300" Width="500">
+        Title="LoginWindow" Height="350" Width="500" Language="es-ES">
     <Grid>
         <Grid.RowDefinitions>
 
@@ -34,27 +34,27 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="btIniciarSesioon" Margin="60,10">Iniciar Sesión</Button>
-            <Button x:Name="btCrearNuevaCuenta" Margin="60,10" Grid.Column="1">Crear nueva cuenta</Button>
+            <Button x:Name="btIniciarSesion" Margin="60,10" Click="btIniciarSesioon_Click">Iniciar Sesión</Button>
+            <Button x:Name="btCrearNuevaCuenta"  Margin="60,10" Grid.Column="1" Click="btCrearNuevaCuenta_Click">Crear nueva cuenta</Button>
 
         </Grid>
         
-        <Label Grid.Row="2" Margin="10" HorizontalAlignment="Right" Visibility="Collapsed">Usuario:</Label>
+        <Label x:Name="lbIniciarSesionUsuario" Grid.Row="2" Margin="10" HorizontalAlignment="Right" Visibility="Collapsed">Usuario:</Label>
         <TextBox x:Name="tbUsuarioIniciarSesion" Grid.Row="2" Grid.Column="1" Margin="10" Visibility="Collapsed"></TextBox>
-        <Label  Grid.Row="3" Margin="10" HorizontalAlignment="Right" Visibility="Collapsed">Contraseña:</Label>
+        <Label x:Name="lbContrasenaIniciarSesion"  Grid.Row="3" Margin="10" HorizontalAlignment="Right" Visibility="Collapsed">Contraseña:</Label>
         <TextBox x:Name="tbContrasenaInciarSesion" Grid.Row="3" Grid.Column="1" Margin="10" Visibility="Collapsed"></TextBox>
-        <Button x:Name="btAceptarIniciarSesion" Grid.Row="5" Grid.ColumnSpan="2" Width="100" Height="24" Visibility="Collapsed">Aceptar</Button>
+        <Button x:Name="btAceptarIniciarSesion" Click="btAceptarIniciarSesion_Click" Grid.Row="5" Grid.ColumnSpan="2" Width="100" Height="30" Visibility="Collapsed">Aceptar</Button>
         
         
-        <Label Grid.Row="1" Margin="10" HorizontalAlignment="Right">usuario:</Label>
+        <Label x:Name="lbUsuarioCrearNuevaCuenta" Grid.Row="1" Margin="10" HorizontalAlignment="Right">usuario:</Label>
         <TextBox x:Name="tbUsuarioCrearNuevaCuenta" Grid.Row="1" Grid.Column="1" Margin="10" ></TextBox>
-        <Label Grid.Row="2" Margin="10" HorizontalAlignment="Right">contraseña:</Label>
+        <Label x:Name="lbContrasenaCrearNuevaCuenta" Grid.Row="2" Margin="10" HorizontalAlignment="Right">contraseña:</Label>
         <TextBox x:Name="tbContrasenaCrearNuevaCuenta" Grid.Row="2" Grid.Column="1" Margin="10" ></TextBox>
-        <Label Grid.Row="3" Margin="10" HorizontalAlignment="Right">email:</Label>
+        <Label x:Name="lbEmailCrearNuevaCuenta" Grid.Row="3" Margin="10" HorizontalAlignment="Right">email:</Label>
         <TextBox x:Name="tbEmailCrearNuevaCuenta" Grid.Row="3" Grid.Column="1" Margin="10" ></TextBox>
-        <Label Grid.Row="4" Margin="10" HorizontalAlignment="Right">año de nacimiento:</Label>
-        <TextBox x:Name="tbAnyoNacimiento" Grid.Row="4" Grid.Column="1" Margin="10" ></TextBox>
-        <Button Grid.Row="5" Grid.ColumnSpan="2" Width="100" Height="24">Aceptar</Button>
+        <Label x:Name="lbAnyoNacimientoCrearNuevaCuenta" Grid.Row="4" Margin="10" HorizontalAlignment="Right">año de nacimiento:</Label>
+        <DatePicker x:Name="dpAnyoNacimiento" Grid.Row="4" Grid.Column="1" Margin="10" ></DatePicker>
+        <Button x:Name="btAceptarCrearNuevaCuenta" Click="btAceptarCrearNuevaCuenta_Click" Grid.Row="5" Grid.ColumnSpan="2" Width="100" Height="30">Aceptar2</Button>
         
     </Grid>
 </Window>

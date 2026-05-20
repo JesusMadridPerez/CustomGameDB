@@ -74,9 +74,9 @@ namespace CustomGameDB
             ImagenPrincipal = await _cache.GetImageAsync(background_image);
         }*/
 
-        private static readonly ImageCacheService _cache = new ImageCacheService();
+        //private static readonly ImageCacheService _cache = new ImageCacheService();
         public SKBitmap ImagenPrincipal { get; set; }
-
+        /*
         public async Task LoadImageAsync(int preferredMaxWidth = 400, int preferredMaxHeight = 300)
         {
             if (string.IsNullOrWhiteSpace(background_image)) return;
@@ -106,6 +106,6 @@ namespace CustomGameDB
             {
                 ImagenPrincipal = bmp;
             }
-        }
+        }*/
     }
 }

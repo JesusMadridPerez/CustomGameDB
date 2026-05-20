@@ -7,14 +7,29 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+	<NoWarn>$(NoWarn);NU1701</NoWarn>
+	<Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.5.1" />
+    <PackageReference Include="FlyleafLib" Version="3.10.3" />
+    <PackageReference Include="FlyleafLib.Controls.WPF" Version="1.6.3" />
+    <PackageReference Include="HandyControl" Version="3.5.1" />
+    <PackageReference Include="HandyControl.Lang.es" Version="3.5.1" />
     <PackageReference Include="LibVLCSharp" Version="3.9.5" />
     <PackageReference Include="LibVLCSharp.WPF" Version="3.9.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.23" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.23">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.23">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3912.50" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
     <PackageReference Include="SkiaSharp" Version="3.119.2" />
     <PackageReference Include="SkiaSharp.Views.WPF" Version="3.119.2" />
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.23" />

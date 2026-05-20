@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,7 +25,7 @@ namespace CustomGameDB
             client = new HttpClient();
         }
 
-        public async Task<GameResults> GetGames(int page_size, int page, string search)
+        public async Task<GameResults> GetGames(int page_size, int page, string search, int idTienda, int idGenero, int idPlataforma)
         {
             GameResults gameResults = new GameResults();
 
@@ -42,6 +43,21 @@ namespace CustomGameDB
                     url += $"&search={searchTerm}";
                 }
 
+                if (idTienda > 0)
+                {
+                    url += $"&stores={idTienda}";
+                }
+
+                if (idGenero > 0)
+                {
+                    url += $"&genres={idGenero}";
+                }
+
+                if (idPlataforma > 0)
+                {
+                    url += $"&platforms={idPlataforma}";
+                }
+
                 // 3. Petición
                 HttpResponseMessage response = await client.GetAsync(url);
 
@@ -54,6 +70,20 @@ namespace CustomGameDB
 
                 if (deserialized != null)
                     gameResults = deserialized;
+
+                if (gameResults.results != null)
+                {
+                    foreach (var game in gameResults.results)
+                    {
+                        if (!string.IsNullOrEmpty(game.background_image))
+                        {
+                            // Reemplazamos /media/ por /media/resize/480/-/ 
+                            // para que el CDN de RAWG nos devuelva la versión ligera
+                            game.background_image = game.background_image.Replace("/media/", "/media/resize/640/-/");
+                        }
+                    }
+                }
+
             }
             catch (HttpRequestException ex)
             {
@@ -79,8 +109,6 @@ namespace CustomGameDB
                 String url = $"https://api.rawg.io/api/games/{id}/movies?key=c5ebc9f26b6642c0a6b92e0fe19ebd11";
 
                 HttpResponseMessage response = await client.GetAsync(url);
-
-
                 response.EnsureSuccessStatusCode();
 
                 string responseJson = await response.Content.ReadAsStringAsync();
@@ -109,6 +137,35 @@ namespace CustomGameDB
 
             }
         }
+
+
+        public async Task<string> GetGameDescription(int gameId)
+        {
+            // La URL cambia ligeramente, ahora apuntamos al ID del juego
+            string url = $"https://api.rawg.io/api/games/{gameId}?key=c5ebc9f26b6642c0a6b92e0fe19ebd11";
+
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                string responseJson = await response.Content.ReadAsStringAsync();
+
+                // Usamos JsonDocument para extraer solo lo que necesitamos sin crear clases complejas
+                using (JsonDocument doc = JsonDocument.Parse(responseJson))
+                {
+                    // RAWG devuelve la descripción en formato HTML
+                    string description = doc.RootElement.GetProperty("description").GetString();
+                    return description;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "No se pudo cargar la descripción.";
+            }
+        }
+
+
 
     }
 

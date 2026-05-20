@@ -14,7 +14,8 @@ namespace CustomGameDB
         public string image { get; set; }
 
         public SKBitmap captura { get; set; }
-        private static readonly ImageCacheService _cache = new ImageCacheService();
+        //private static readonly ImageCacheService _cache = new ImageCacheService();
+        /*
         public async Task LoadImageAsync(int preferredMaxWidth = 400, int preferredMaxHeight = 300)
         {
             if (string.IsNullOrWhiteSpace(image)) return;
@@ -45,7 +46,7 @@ namespace CustomGameDB
                 captura = bmp;
             }
         }
-
+        */
 
     }
 }

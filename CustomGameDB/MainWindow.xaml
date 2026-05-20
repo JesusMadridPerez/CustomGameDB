@@ -5,131 +5,268 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CustomGameDB"
         xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
-        
-        
+        xmlns:fl="clr-namespace:FlyleafLib.Controls.WPF;assembly=FlyleafLib.Controls.WPF"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" >
+        xmlns:localControles="clr-namespace:CustomGameDB.controles"
+        Title="MainWindow" Height="600" Width="1000" Loaded="Window_Loaded" Language="es-ES">
+
     <Window.Resources>
         <Style x:Key="textBlocks" TargetType="TextBlock">
             <Setter Property="TextWrapping" Value="Wrap"></Setter>
         </Style>
+        <Style x:Key="tarjetaJuego" TargetType="ContentControl">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContentControl">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="10" Margin="10">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="10" Opacity="0.15" ShadowDepth="3"/>
+                            </Border.Effect>
+                            <ContentPresenter Margin="15"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)" To="1.05" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)" To="1.05" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.2"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
-    <Grid>
+
+    <Grid Background="#1E1E24">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="35"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-            <Menu VerticalAlignment="Top" Grid.Row="0">
-            <MenuItem Header="Juegos">
-                <MenuItem Header="Añadir juego" />
-                <MenuItem Header="Eliminar juego seleccionado" />
-                
-                
-            </MenuItem>
-            <MenuItem Header="Partidas guardadas">
-                <MenuItem Header="_Add Game" />
-                <MenuItem Header="_Remove Game"/>
-            </MenuItem>
-        </Menu>
-        <ToolBar Grid.Row="1">
-            <Button x:Name="BtBuscar" Content="Buscar:" Click="BtBuscarClick" />
-            <TextBox x:Name="tbBuscar" Width="100" KeyDown="tbBuscar_KeyDown"  />
-            <Button x:Name="btanterior" Click="btanterior_Click" >Atras</Button>
-            
-        </ToolBar>
-        <DataGrid x:Name="dgDatosJuegos" Grid.Row="2" AutoGenerateColumns="False" ScrollViewer.ScrollChanged="dgGames_ScrollChanged"
-          VirtualizingStackPanel.IsVirtualizing="True" 
-          VirtualizingStackPanel.VirtualizationMode="Recycling" SelectionChanged="dgDatosJuegos_SelectionChanged"
-                   GridLinesVisibility="None">
-            <DataGrid.Columns >
-                <DataGridTextColumn Header="Título del Juego" Binding="{Binding name}" Width="*" />
-                <DataGridTextColumn Header="fecha de lanzamiento" Binding="{Binding released}" Width="*" />
-                <DataGridTextColumn Header="nota" Binding="{Binding rating}" Width="*" />
-                <DataGridTemplateColumn Header="Portada" Width="*">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <local:SkiaImage Bitmap="{Binding ImagenPrincipal}"   Height="200"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                
-            </DataGrid.Columns>
-        </DataGrid>
-        <Grid x:Name="gridDatosJuegos" Grid.Row="2" Visibility="Hidden" IsEnabled="False" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <ScrollViewer VerticalScrollBarVisibility="Auto" >
-                <StackPanel Grid.Column="0">
-                <local:SkiaImage x:Name="imagenJuego"  Bitmap="{Binding ImagenPrincipal}" Height="200"/>
-                <Label x:Name="lbName" HorizontalAlignment="Center" FontWeight="Bold" FontSize="20" Content="{Binding name}"></Label>
-                    <Grid >
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+
+        <TabControl x:Name="tabControlJuegos" Grid.Row="0" Background="#1E1E24" BorderThickness="0" Height="35" VerticalAlignment="Top" SelectionChanged="tabControlJuegos_SelectionChanged" >
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Background" Value="#15151A"/>
+                    <Setter Property="Foreground" Value="#888899"/>
+                    <Setter Property="FontSize" Value="14"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#2A2A32"/>
+                            <Setter Property="Foreground" Value="#5865F2"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header="INICIO" Padding="10,0,15,0" Margin="0,0,5,0"/>
+            <TabItem Header="MI PERFIL" Padding="10,0,15,0" Margin="0,0,5,0"/>
+            <TabItem Header="AMIGOS" Padding="10,0,15,0" Margin="0,0,5,0"/>
+        </TabControl>
+
+        <Grid Grid.Row="1">
+
+            <localControles:ConfiguracionUsuario x:Name="configuracionUsuario" Visibility="Collapsed" />
+            <localControles:Amigos x:Name="amigosControl" Visibility="Collapsed" />
+
+            <Grid x:Name="gridDatosJuegos" Visibility="Collapsed" Background="#121212">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <ToolBar Grid.Row="0" VerticalAlignment="Top" Height="50" Background="#1E1E24">
+                    <Button x:Name="btanterior" Click="btanterior_Click">Atras</Button>
+                </ToolBar>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="20">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" Text="Fecha de lanzamiento:"/>
-                        <Label x:Name="lbfechaLanzamiento" Grid.Row="0" Grid.Column="1"  Content="{Binding released}"/>
-                        <Label  Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Content="Nota:"/>
-                        <Label x:Name="lbRating" Grid.Row="1" Grid.Column="1"  Content="{Binding rating}"/>
-                        <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Content="Numero de reviews:"/>
-                        <Label x:Name="lbNumeroReviews" Grid.Row="2" Grid.Column="1"  Content="{Binding reviews_text_count}"/>
-                        <Label Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" Content="Nota metacritic:"/>
-                        <Label x:Name="lbMetacritic" Grid.Row="3" Grid.Column="1"  Content="{Binding metacritic}"/>
-                        <Label Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" Content="Tiempo para completar el juego:"/>
-                        <Label x:Name="lbPlaytime" Grid.Row="4" Grid.Column="1"  Content="{Binding playtime}"/>
-                        <Label Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" Content="Generos: "/>
-                        <TextBlock x:Name="lbGeneros" Grid.Row="5" Style="{StaticResource textBlocks}" Grid.Column="1"  Text="{Binding generos}"/>
-                        <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource textBlocks}" HorizontalAlignment="Right" Text="Tiendas: "/>
-                        <TextBlock x:Name="lbTiendas" Grid.Row="6" Grid.Column="1" Style="{StaticResource textBlocks}" Text="{Binding tiendas}"/>
-                        <Label Grid.Row="7" Grid.Column="0" HorizontalAlignment="Right" Content="Plataformas: "/>
-                        <TextBlock x:Name="lbPlataformas" Grid.Row="7" Grid.Column="1" Style="{StaticResource textBlocks}" Text="{Binding plataformas}"/>
-                        <Label Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right" Content="etiquetas: "/>
-                        <TextBlock x:Name="lbEtiquetas" Grid.Row="8" Grid.Column="1" Style="{StaticResource textBlocks}" Text="{Binding etiquetas}"/>
-                        
+
+                        <StackPanel Grid.Column="0" Margin="0,10,20,0">
+                            <Border Background="#1E1E1E" Height="100" Padding="10" CornerRadius="20" BorderBrush="#333" BorderThickness="0,0,0,1">
+                                <TextBlock x:Name="lbName" FontSize="32" FontWeight="ExtraBold" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock x:Name="tbTrailer" Text="Trailer" Foreground="#BB86FC" FontWeight="Bold" Margin="0,30,0,10"/>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="400" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0" CornerRadius="8" x:Name="bordeImagenFondo" ClipToBounds="True" Background="Black" Visibility="Collapsed">
+                                    <Image x:Name="imagenFondo" Stretch="UniformToFill"/>
+                                </Border>
+                                <Border Grid.Row="0" CornerRadius="8" x:Name="bordeTrailer" ClipToBounds="True" Background="Black">
+                                    <wv2:WebView2 x:Name="videoControl" />
+                                </Border>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+                                    <ComboBox x:Name="cbTrailers" Width="150" SelectionChanged="cbTrailers_SelectionChanged" />
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Text="Galería de Imágenes" Foreground="#BB86FC" FontWeight="Bold" Margin="0,25,0,10"/>
+                            <ListBox x:Name="capturas" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="5" Margin="5" ClipToBounds="True">
+                                            <Image Source="{Binding image}" Height="120" Stretch="UniformToFill"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <TextBlock Text="Acerca de este juego" Foreground="#BB86FC" FontWeight="Bold" Margin="0,25,0,10"/>
+                            <TextBlock x:Name="tbDescripcion" Foreground="#B3B3B3" TextWrapping="Wrap" FontSize="14" LineHeight="22"/>
+                            <Border CornerRadius="10" Background="#1E1E1E" Padding="5" BorderThickness="1" BorderBrush="#333">
+                                <wv2:WebView2 x:Name="webDescripcion" Height="400" DefaultBackgroundColor="Transparent" />
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="0,10,0,0">
+                            <Border Background="#1E1E1E" CornerRadius="10" Padding="15" Margin="0,0,0,20">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Margin="0,5">
+                                        <TextBlock Text="PLATAFORMAS" FontSize="10" Foreground="#BB86FC" FontWeight="Bold"/>
+                                        <TextBlock x:Name="tbPlataformas" Foreground="White" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="1" Margin="0,5">
+                                        <TextBlock Text="GENEROS" FontSize="10" Foreground="#BB86FC" FontWeight="Bold"/>
+                                        <TextBlock x:Name="tbGeneros" Foreground="White" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="2" Margin="0,5">
+                                        <TextBlock Text="TIENDAS" FontSize="10" Foreground="#BB86FC" FontWeight="Bold"/>
+                                        <TextBlock x:Name="tbTiendas" Foreground="White" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="3" Margin="0,15">
+                                        <TextBlock Text="LANZAMIENTO" FontSize="10" Foreground="#BB86FC" FontWeight="Bold"/>
+                                        <TextBlock x:Name="tbFechaLanzamiento" Foreground="White" FontSize="16"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="4" Margin="0,15">
+                                        <TextBlock Text="HORAS JUGADAS DE MEDIA" FontSize="10" Foreground="#BB86FC" FontWeight="Bold"/>
+                                        <TextBlock x:Name="tbHorasJugadas" Foreground="White" FontSize="16"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="5">
+                                        <TextBlock Text="METACRITIC" FontSize="10" Foreground="#BB86FC" FontWeight="Bold"/>
+                                        <Border Background="#66CC33" HorizontalAlignment="Left" CornerRadius="4" Padding="5,2">
+                                            <TextBlock x:Name="tbMetacritic" FontWeight="Bold" Foreground="Black"/>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            <Border Background="#252525" CornerRadius="10" Padding="20" BorderBrush="#333" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="MI RESEÑA" FontSize="18" FontWeight="Bold" Foreground="White" Margin="0,0,0,15"/>
+                                    <Label Content="Nota Personal (1-100):" Foreground="White" Background="#5865F2"/>
+                                    <Slider x:Name="sliderNota" Minimum="1" Maximum="100" Value="50" TickFrequency="1" IsSnapToTickEnabled="True"/>
+                                    <TextBlock x:Name="tbSliderNota" Text="{Binding ElementName=sliderNota, Path=Value}" HorizontalAlignment="Right" Foreground="#5865F2"/>
+                                    <Label Content="Estado del Juego:" Foreground="White" Margin="0,10,0,0" Background="#5865F2"/>
+                                    <ComboBox x:Name="cbEstado">
+                                        <ComboBoxItem Content="Pendiente" IsSelected="True"/>
+                                        <ComboBoxItem Content="Iniciado"/>
+                                        <ComboBoxItem Content="Terminado"/>
+                                        <ComboBoxItem Content="Abandonado"/>
+                                    </ComboBox>
+                                    <CheckBox x:Name="chbFavorito" Content="Añadir a Favoritos" Foreground="White" Background="#5865F2" Margin="0,15"/>
+                                    <Label Content="Comentarios:" Foreground="White" Background="#5865F2"/>
+                                    <TextBox x:Name="tbReview" Height="200" TextWrapping="Wrap" AcceptsReturn="True" Background="#333" Foreground="White" BorderThickness="0" CaretBrush="White" VerticalScrollBarVisibility="Auto" ScrollViewer.IsDeferredScrollingEnabled="True"/>
+                                    <Label Content="Horas jugadas por ti:" Foreground="White" Background="#5865F2"/>
+                                    <TextBox x:Name="tbHorasJugadasPersonal" Background="#333" Foreground="White" BorderThickness="0" CaretBrush="White" Margin="0,5,0,15" PreviewTextInput="tbHorasJugadasPersonal_PreviewTextInput" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox x:Name="tbSeleccionarRuta" IsEnabled="False" Background="#333" Foreground="White" BorderThickness="0" CaretBrush="White" Margin="0,5,0,15" />
+                                        <Button x:Name="btnRuta" Content="Seleccionar Ruta Executable" Margin="0,15,0,5" Grid.Column="1" Padding="5" Click="btnRuta_Click" />
+                                    </Grid>
+                                    
+                                    <Button x:Name="btnGuardar" Content="GUARDAR CAMBIOS" Background="#5865F2" Foreground="Black" FontWeight="Bold" Height="40" Margin="0,10,0,0" Click="btnGuardar_Click">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="CornerRadius" Value="5"/>
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
                     </Grid>
-                    
+                </ScrollViewer>
+            </Grid>
 
+            <Grid x:Name="dgDatosJuegos" Background="#1E1E24" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
+                <ToolBar Grid.Row="0" HorizontalAlignment="Stretch" Background="#1E1E24" BorderThickness="0">
+                    <Button x:Name="BtBuscar2" Content="Buscar:" Click="BtBuscar2_Click" Foreground="White" Background="#5865F2" />
+                    <TextBox x:Name="tbBuscar2" Width="100" KeyDown="tbBuscar2_KeyDown" Background="#2A2A32" Foreground="White" VerticalContentAlignment="Center"/>
+                    <Button x:Name="btanterior2" Click="btanterior2_Click" Foreground="White" Background="#5865F2" >Atras</Button>
+                    <Label Background="#2A2A32" Foreground="White" >Filtrar por tienda:</Label>
+                    <ComboBox x:Name="cbTiendas2" Width="80" Background="#2A2A32" Foreground="White"></ComboBox>
+                    <Label Background="#2A2A32" Foreground="White">Filtrar por género:</Label>
+                    <ComboBox x:Name="cbGeneros2" Width="80" Background="#2A2A32" Foreground="White"></ComboBox>
+                    <Label Background="#2A2A32" Foreground="White">Filtrar por plataforma:</Label>
+                    <ComboBox x:Name="cbPlataformas2" Width="80" Background="#2A2A32" Foreground="White"></ComboBox>
+                </ToolBar>
 
-                </StackPanel>
-            </ScrollViewer>
-            
-
-                <DataGrid x:Name="capturas" Grid.Column="1"  HeadersVisibility="None" GridLinesVisibility="None"  AutoGenerateColumns="False">
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="Capturas" Width="*">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Image Source="{Binding image}" Height="200"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-
-                </DataGrid>
-                <!--<vlc:VideoView x:Name="videoView" Height="200" Margin="0,10,0,0"/>-->
-                    
-            
-           
-
+                <ScrollViewer Grid.Row="1" ScrollChanged="Games_ScrollChanged" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="itemsControlJuegos" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ContentControl Style="{StaticResource tarjetaJuego}" Width="220" MouseDown="Tarjeta_MouseDown">
+                                    <StackPanel>
+                                        <Image Source="{Binding background_image}" Height="140" Stretch="Fill"/>
+                                        <TextBlock Text="{Binding name}" FontWeight="Bold" Margin="0,5" Foreground="Black"/>
+                                    </StackPanel>
+                                </ContentControl>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
 
         </Grid>
-        
-        
     </Grid>
 </Window>
